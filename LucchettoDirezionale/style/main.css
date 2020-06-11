@@ -10,10 +10,12 @@ body{
     -webkit-transform-origin: top left;
 }
 #mainContainer{
+	position: absolute;
+	left: 176px;
+	top: 0px;
 	width: 627px;
 	margin: auto;
 	margin-top: 50px;
-	position: relative;
 }
 
 #clip{
@@ -22,14 +24,14 @@ body{
 	width: 378px;
 	height: 456px;
 	left: 126px;
-	top: 310px;
+	top: 210px;
 }
 #clip.pressed{
-	top: 350px !important;
+	top: 250px !important;
 }
 
 .won #clip{
-	top: 180px !important;
+	top: 92px !important;
 }
 
 #lock{
@@ -37,7 +39,7 @@ body{
 	background: url(body.png) no-repeat;
 	width: 627px;
 	height: 797px;
-	top: 600px;
+	top: 500px;
 }
 #cursorContainer{
 	position: absolute;
@@ -56,12 +58,13 @@ body{
 }
 
 #instruction{
+	padding: 30px; 
 	width: 100%;
 	text-align: center;
-	font-size: 40px;
+	font-size: 34px;
 	font-weight: bold;
 	font-family: helvetica;
-	top: 366px;
+	top: 266px;
 	color: #FFFF;
 }
 
@@ -72,6 +75,6 @@ body{
 	font-size: 34px;
 	font-weight: bold;
 	font-family: helvetica;
-	top: 366px;
+	top: 266px;
 	color: red;
 }
