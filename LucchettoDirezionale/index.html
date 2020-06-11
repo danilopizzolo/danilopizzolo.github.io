@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=980">
+    <link rel="stylesheet" href="style/main.css" />
+    <script src="js/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+     var touches = [{"x":50,"y":50},{"x":0,"y":0}]; //["firstTouch","secondTouch"]   
+
+    var scaleFactor = 1;
+
+    var counterTouches = 0;
+    var orientation = screen.msOrientation || screen.mozOrientation || (screen.orientation || {}).type;
+    var realWidth=$(window).width();
+    var lastMove=0;
+    var userInput='';
+
+    $(function() {
+        scaleFactor=realWidth/980;
+        $("body").attr("style","-webkit-transform: scale("+scaleFactor+")");  //ridimensiona la finestra a seconda del dispositivo
+
+        document.body.addEventListener("touchmove", function() {
+            event.preventDefault();
+         },{passive: false});  //fermo eventuali scroll di troppo
+
+        var moving=false;
+        var direction=0; //0 fermo, 1 = horizontal, 2= vertical
+        var lastX=0;
+        var lastY=0;
+        
+        var cointainer = document.getElementById('cursorContainer');
+        var cursor = document.getElementById('cursor');
+
+        var startingX = getTranslateX(cursor);
+        var startingY = getTranslateY(cursor);
+
+        $(cointainer).on("touchend", function() {
+            $(cursor).attr("style", "");
+            moving=false;
+            direction=0;
+            touches[1]["x"]=0;
+            touches[1]["y"]=0;
+            lastMove = 0;
+        });
+
+
+        cointainer.addEventListener("touchmove", function() { //utilizzo l'event listener per il "passive":true
+            event.preventDefault();
+            var small_r = $(cursor).width() / 2;
+            var r = $(cointainer).width() / 2;
+
+            var touch = event.targetTouches[0];
+
+            // var eventX = event.clientX != null ? event.clientX : event.touches[1].clientX;
+            // var eventY = event.clientY != null ? event.clientY : event.touches[1].clientY;
+
+            var eventX = touch.pageX;
+            var eventY = touch.pageY;
+
+            var mx = (eventX / scaleFactor - $(cointainer).offset().left / scaleFactor - small_r); // Get the horizontal coordinate
+            var my = (eventY / scaleFactor - $(cointainer).offset().top / scaleFactor - small_r);
+
+            var origin_x = r - small_r;
+            var origin_y = r - small_r;
+            var x = mx - origin_x,
+                y = my - origin_y;
+
+            var l = Math.sqrt(x * x + y * y);
+            var l_in = Math.min(r-small_r, l); //il minore tra quello calcolato e il raggio
+
+            var resX = x / l * l_in + origin_x;
+            var resY = y / l * l_in + origin_y;
+
+            if(!moving){
+                moving = true;
+                lastX=resX;
+                lastY=resY;
+            }else{
+                if(direction==0){
+                    var deltaX = Math.abs(resX-lastX);
+                    var deltaY = Math.abs(resY-lastY);
+                    if(deltaX>5||deltaY>5){//se mi sono spostato almeno di 5px
+                        direction=deltaX>deltaY?1:2;
+                    }
+                }else{
+                    if(direction==1){
+                        resY = startingY; //blocco asse Y
+                        if(l>=r-small_r-1)//se ho toccato il massimo accetto la direzione
+                            logMovement(resX>startingX?'r':'l');
+                     }
+                    if(direction==2) {
+                        resX = startingX;
+                        if(l>=r-small_r-1)//se ho toccato il massimo accetto la direzione
+                            logMovement(resY>startingY?'d':'u');
+                    }
+                    $(cursor).attr("style", "-webkit-transform: translate(" + resX + "px , " + resY + "px)");
+
+                }
+            }
+            touches[1]["x"]=Math.round($(cursor).offset().left/scaleFactor+small_r);
+            touches[1]["y"]=Math.round($(cursor).offset().top/scaleFactor+small_r);
+
+        },{passive: false});
+
+
+        document.getElementById('clip').addEventListener("touchstart", function() {
+            event.preventDefault();
+            $(this).addClass("pressed");
+            $("#mainContainer").removeClass("won");
+            userInput="";
+        },{passive: false});
+
+        $("#clip").on("touchend", function() {
+            $(this).removeClass("pressed");
+        });
+    });
+
+    function logMovement(dir){
+        if(lastMove == 0){
+            lastMove = dir;
+            userInput+=dir;
+            checkSolution();
+        }
+    }
+    function checkSolution(){
+        if(userInput=='lurd'){
+            $("#mainContainer").addClass("won");
+        }
+    }
+
+    function getTranslateX(myElement) {
+        var style = window.getComputedStyle(myElement);
+        var matrix = new WebKitCSSMatrix(style.webkitTransform);
+        return matrix.m41;
+    }
+    function getTranslateY(myElement) {
+        var style = window.getComputedStyle(myElement);
+        var matrix = new WebKitCSSMatrix(style.webkitTransform);
+        return matrix.m42;
+    }
+
+    </script>
+</head>
+
+<body>
+    <div id="mainContainer">
+        <div id="instruction">Inserisci la combinazione corretta spostando il cursore nelle varie direzioni<br/>Premi il cricchetto per resettare</div>
+        <div id="code">Oscar babbo!</div>
+        <div id="clip"></div>
+        <div id="lock">
+            <div id="cursorContainer">
+                <div id="cursor"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

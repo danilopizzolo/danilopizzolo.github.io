@@ -1,0 +1,79 @@
+body,html{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background-color: #005500;
+	margin: 0;
+}
+body{
+
+    -webkit-transform-origin: top left;
+}
+#mainContainer{
+	width: 627px;
+	margin: auto;
+	margin-top: 100px;
+	position: relative;
+}
+
+#mainContainer
+
+#clip{
+	position: absolute;
+	background: url(clip.png) no-repeat;
+	width: 378px;
+	height: 456px;
+	left: 126px;
+	top: 410px;
+}
+#clip.pressed{
+	top: 450px !important;
+}
+
+.won #clip{
+	top: 280px !important;
+}
+
+#lock{
+	position: absolute;
+	background: url(body.png) no-repeat;
+	width: 627px;
+	height: 797px;
+	top: 700px;
+}
+#cursorContainer{
+	position: absolute;
+	left: 50px;
+	top: 225px;
+	width: 527px;
+	height: 527px;
+}
+#cursor{
+	position: absolute;
+	width: 368px;
+	height: 368px;
+	background: url(cursor.png) no-repeat;
+	-webkit-transform-origin: top left;
+	-webkit-transform: translate(76px , 76px);
+}
+
+#instruction{
+	width: 100%;
+	text-align: center;
+	font-size: 46px;
+	font-weight: bold;
+	font-family: helvetica;
+	top: 466px;
+	color: #FFFF;
+}
+
+#code{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	font-size: 34px;
+	font-weight: bold;
+	font-family: helvetica;
+	top: 466px;
+	color: red;
+}
